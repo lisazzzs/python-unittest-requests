@@ -1,4 +1,3 @@
-# 主要是生成测试报告相关
 # -*- coding: utf-8 -*-
 """
 A TestRunner for use with the Python unit testing framework. It
@@ -730,7 +729,10 @@ class HTMLTestRunner(Template_mixin):
             ending=ending,
             chart_script=chart
         )
-        self.stream.write(output.encode('utf8'))
+        # print('output' + output)
+        # self.stream.write(output.encode('utf8'))
+        self.stream.write(output)
+
  
     def _generate_stylesheet(self):
         return self.STYLESHEET_TMPL
@@ -863,3 +865,4 @@ main = TestProgram
  
 if __name__ == "__main__":
     main(module=None)
+    # print('output=' + output)
