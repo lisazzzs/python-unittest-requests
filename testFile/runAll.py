@@ -14,10 +14,12 @@ import pythoncom
 send_mail = send_email()
 path = getpathInfo.get_Path()
 print(path)
-report_path = os.path.join(path,'../', 'result')
+# report_path = os.path.join(path,'../', 'result')
+report_path = os.path.join(path, '../result')
 print(report_path)
-on_off = readConfig.ReadConfig().get_email('on_off')
+# on_off = readConfig.ReadConfig().get_email('on_off')
 # log = common.Log.logger
+on_off = 'on'
  
 class AllTest:#定义一个类AllTest
     def __init__(self):#初始化一些参数和数据
@@ -87,6 +89,7 @@ class AllTest:#定义一个类AllTest
         finally:
             print("*********TEST END*********")
             #log.info("*********TEST END*********")
+            fp = open(resultPath, 'wb')#打开result/20181108/report.html测试报告文件，如果不存在就创建
             fp.close()
         #判断邮件发送的开关
         if on_off == 'on':
