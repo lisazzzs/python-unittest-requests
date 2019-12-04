@@ -17,12 +17,14 @@ addressee = read_conf.get_email('addressee')#从配置文件中读取，邮件�
 cc = read_conf.get_email('cc')#从配置文件中读取，邮件抄送人
 # mail_path = os.path.join(getpathInfo.get_Path(), 'result', 'report.html')#获取测试报告路径
 mail_path = os.path.join(getpathInfo.get_Path(),'../', 'result', 'report.html')
+print(mail_path)
 
  
 class send_email():
     def outlook(self):
         olook = win32.Dispatch("%s.Application" % app)
-        mail = olook.CreateItem(win32.constants.olMailItem)
+        # mail = olook.CreateItem(win32.constants.olMailItem)
+        mail = olook.CreateItem(0)
         mail.To = addressee # 收件人
         mail.CC = cc # 抄送
         mail.Subject = str(datetime.datetime.now())[0:19]+'%s' %subject#邮件主题
