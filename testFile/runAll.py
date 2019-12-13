@@ -2,6 +2,7 @@
 import os
 import sys
 sys.path.append('D:\python\myj\\common')
+# from HTMLTestRunner import HTMLTestRunner
 import HTMLTestRunner as HTMLTestRunner
 import getpathInfo
 import unittest
@@ -9,7 +10,7 @@ import readConfig
 from configEmail import send_email
 from apscheduler.schedulers.blocking import BlockingScheduler
 import pythoncom
-# import common.Log
+import logging
  
 send_mail = send_email()
 path = getpathInfo.get_Path()
@@ -20,21 +21,27 @@ print(report_path)
 # on_off = readConfig.ReadConfig().get_email('on_off')
 # log = common.Log.logger
 on_off = 'on'
+
  
 class AllTest:#定义一个类AllTest
     def __init__(self):#初始化一些参数和数据
         global resultPath
         resultPath = os.path.join(report_path, "report.html")#result/report.html
         self.caseListFile = os.path.join(path, "caselist.txt")#配置执行哪些测试文件的配置文件路径
-        self.caseFile = os.path.join(path, "testCase")#真正的测试断言文件路径
+        self.caseFile = os.path.join(path, "../testCase")#真正的测试断言文件路径
+        # self.caseFile = ("D:\python\myj\\testCase")
         self.caseList = []
+        print(self.caseFile)
+        # log.info('resultPath',resultPath)
+        # log.info('caseListFile',self.caseListFile)
+        # log.info('caseList',self.caseList)
  
     def set_case_list(self):
         """
         读取caselist.txt文件中的用例名称，并添加到caselist元素组
         :return:
         """
-        fb = open(self.caseListFile)
+        fb = open(self.caseListFile,encoding='utf-8')
         for value in fb.readlines():
             data = str(value)
             if data != '' and not data.startswith("#"):# 如果data非空且不以#开头
@@ -51,6 +58,7 @@ class AllTest:#定义一个类AllTest
         for case in self.caseList:#从caselist元素组中循环取出case
             case_name = case.split("/")[-1]#通过split函数来将aaa/bbb分割字符串，-1取后面，0取前面
             print(case_name+".py")#打印出取出来的名称
+            print(self.caseFile)
             #批量加载用例，第一个参数为用例存放路径，第一个参数为路径文件名
             discover = unittest.defaultTestLoader.discover(self.caseFile, pattern=case_name + '.py', top_level_dir=None)
             suite_module.append(discover)#将discover存入suite_module元素组
@@ -69,33 +77,32 @@ class AllTest:#定义一个类AllTest
         run test
         :return:
         """
-        try:
-            suit = self.set_case_suite()#调用set_case_suite获取test_suite
-            print('try')
-            print(str(suit))
-            if suit is not None:#判断test_suite是否为空
-                print('if-suit')
-                fp = open(resultPath, 'wb',encoding='utf-8')#打开result/20181108/report.html测试报告文件，如果不存在就创建
-                # print(fp)
-                #调用HTMLTestRunner
-                runner = HTMLTestRunner.HTMLTestRunner(stream=fp, title='Test Report', description='Test Description')
-                runner.run(suit)
-            else:
-                print("Have no case to test.")
-        except Exception as ex:
-            print(str(ex))
+        # try:
+        suit = self.set_case_suite()#调用set_case_suite获取test_suite
+        print('try')
+        print(str(suit))
+        if suit is not None:#判断test_suite是否为空
+            with open(resultPath,'wb') as fp:
+            # fp = open(resultPath, 'w')#打开result/20181108/report.html测试报告文件，如果不存在就创建
+            #调用HTMLTestRunner
+              runner = HTMLTestRunner.HTMLTestRunner(stream=fp, title='Test Report', description='Test Description')
+              runner.run(suit)
+        else:
+            print("Have no case to test.")
+        # except Exception as ex:
+        #     print(str(ex))
             #log.info(str(ex))
  
-        finally:
-            print("*********TEST END*********")
+        # finally:
+        print("*********TEST END*********")
             #log.info("*********TEST END*********")
-            fp = open(resultPath, 'wb')#打开result/20181108/report.html测试报告文件，如果不存在就创建
-            fp.close()
+            # fp = open(resultPath, 'wb')#打开result/20181108/report.html测试报告文件，如果不存在就创建
+            # fp.close()
         #判断邮件发送的开关
-        if on_off == 'on':
-            send_mail.outlook()
-        else:
-            print("邮件发送开关配置关闭，请打开开关后可正常自动发送测试报告")
+        # if on_off == 'on':
+        #     send_mail.outlook()
+        # else:
+        #     print("邮件发送开关配置关闭，请打开开关后可正常自动发送测试报告")
 # pythoncom.CoInitialize()
 # scheduler = BlockingScheduler()
 # scheduler.add_job(AllTest().run, 'cron', day_of_week='1-5', hour=14, minute=59)
@@ -103,5 +110,5 @@ class AllTest:#定义一个类AllTest
  
 if __name__ == '__main__':
     AllTest().run()
- 
- 
+logging.basicConfig(level = logging.INFO,format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)

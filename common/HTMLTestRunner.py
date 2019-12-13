@@ -730,8 +730,8 @@ class HTMLTestRunner(Template_mixin):
             chart_script=chart
         )
         # print('output' + output)
-        # self.stream.write(output.encode('utf8'))
-        self.stream.write(output)
+        # self.stream.write(output)
+        self.stream.write(output.encode('utf-8'))
 
  
     def _generate_stylesheet(self):

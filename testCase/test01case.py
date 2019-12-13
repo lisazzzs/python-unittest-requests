@@ -52,6 +52,7 @@ class testUserLogin(unittest.TestCase):
 
   def test01case(self):
     self.checkResult()
+    # self.assertEqual('foo'.upper(),'F00')
 
   def tearDown(self):
     print("测试结束，输出log完结\n\n")
@@ -64,12 +65,16 @@ class testUserLogin(unittest.TestCase):
 
     url1 = "http://www.xxx.com/login?"
     new_url = url1 + self.query
+    print(new_url)
     data1 = dict(urllib.parse.parse_qs(urllib.parse.urlsplit(new_url).query))
     info = RunMain().run_main(self.method,url,data1)
     ss = json.loads(info)
     if self.case_name == 'login':
       self.assertEqual(ss['code'],200)
     if self.case_name == 'login_error':
-      self.assertEqual(['code'],-1)
+      self.assertEqual(ss['code'],-1)
     if self.case_name == 'login_null':
       self.assertEqual(ss['code'],10001)
+
+
+
